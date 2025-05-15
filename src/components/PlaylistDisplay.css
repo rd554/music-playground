@@ -1,0 +1,96 @@
+/* PlaylistDisplay custom styles */
+
+.hover\:shadow-glow:hover {
+  box-shadow: 0 0 15px rgba(255, 105, 255, 0.5), 
+              0 0 30px rgba(255, 105, 255, 0.2);
+}
+
+.hover\:shadow-glow-sm:hover {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Custom scrollbar for the playlist */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Hide scrollbar for Firefox */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+}
+
+/* Pulsating animation for active song */
+@keyframes pulse-soft {
+  0% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+.pulse-soft {
+  animation: pulse-soft 2s infinite ease-in-out;
+}
+
+/* Song card animation */
+.song-card-large {
+  animation: card-appear 0.5s ease-out;
+  transform-origin: center;
+}
+
+@keyframes card-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Scroll indicator animation */
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.bounce-subtle {
+  animation: bounce-subtle 2s infinite ease-in-out;
+}
+
+/* Navigation dots animation */
+@keyframes dot-expand {
+  0% {
+    width: 6px;
+  }
+  50% {
+    width: 16px;
+  }
+  100% {
+    width: 6px;
+  }
+} 

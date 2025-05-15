@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+p {
+  font-weight: 500;
+  color: #e0e0e0;
+}
+
+.space-between {
+  margin-top: 4rem;
+}
+
+@media (max-width: 768px) {
+  .h-64 {
+    height: 48vh;
+    width: 48vh;
+  }
+}
+.playlist-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+}
