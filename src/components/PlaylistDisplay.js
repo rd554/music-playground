@@ -152,25 +152,25 @@ export default function PlaylistDisplay() {
   const hasPrevSong = currentSongIndex > 0;
 
   return (
-    <div className='absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center px-4'>
+    <div className='absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center'>
       <div 
         className={`h-64 w-64 -translate-y-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full 
           shadow-2xl text-white flex flex-col items-center justify-center overflow-hidden
-          transition-all duration-500 ease-in-out relative
+          transition-all duration-500 ease-in-out
           ${isAnimating ? 'scale-110 opacity-90' : 'scale-100 opacity-100'}`}
         ref={scrollContainerRef}
       >
         {isLoading ? (
           <div className="flex flex-col items-center">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-2"></div>
-            <p className="text-sm">Generating playlist...</p>
+            <p>Generating playlist...</p>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-between w-full h-full relative pt-4 pb-2">
+          <div className="flex flex-col items-center justify-between w-full h-full relative pt-5 pb-3">
             {/* Song navigation indicators */}
-            <div className="absolute top-1 left-0 right-0 flex justify-center items-center">
+            <div className="absolute top-1.5 left-0 right-0 flex justify-center items-center">
               <div className="flex space-x-1">
-                {playlist?.songs.map((_, idx) => (
+                {playlist.songs.map((_, idx) => (
                   <div 
                     key={idx} 
                     className={`h-1 rounded-full transition-all duration-300 ${
@@ -189,53 +189,56 @@ export default function PlaylistDisplay() {
             </div>
             
             {/* Current song card */}
-            <div className="flex flex-col items-center justify-center flex-grow w-full px-3">
+            <div className="flex flex-col items-center justify-center flex-grow w-full px-3 mt-3">
               <div 
                 className={`w-[85%] bg-black bg-opacity-30 backdrop-blur-sm
                   rounded-2xl p-2 flex flex-col items-center transition-all duration-500 
-                  hover:shadow-glow cursor-pointer song-card
-                  ${currentPreview === currentSong?.previewUrl && isPlaying ? 'pulse-soft' : ''}`}
+                  hover:shadow-glow cursor-pointer song-card-large
+                  ${currentPreview === currentSong.previewUrl && isPlaying ? 'pulse-soft' : ''}`}
                 style={{
                   background: 'linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2))',
                   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                 }}
               >
                 {/* Album Art */}
-                {currentSong?.albumArt ? (
+                {currentSong.albumArt ? (
                   <img 
                     src={currentSong.albumArt} 
                     alt={`${currentSong.title} album art`} 
-                    className="h-12 w-12 rounded-full mb-1 object-cover border border-white border-opacity-30"
+                    className="h-14 w-14 rounded-full mb-1 object-cover border border-white border-opacity-30"
                   />
                 ) : (
-                  <div className="h-12 w-12 bg-gradient-to-br from-purple-700 to-pink-600 rounded-full mb-1 flex items-center justify-center">
-                    <span className="text-lg">🎵</span>
+                  <div className="h-14 w-14 bg-gradient-to-br from-purple-700 to-pink-600 rounded-full mb-1 flex items-center justify-center border border-white border-opacity-30">
+                    <span className="text-xl">🎵</span>
                   </div>
                 )}
                 
                 {/* Song Info */}
                 <div className="text-center mb-1 w-full px-1">
-                  <p className='text-sm font-medium truncate'>{currentSong?.title}</p>
-                  <p className='text-xs text-gray-300 truncate'>{currentSong?.artist}</p>
+                  <p className='text-sm font-medium text-white truncate'>{currentSong.title}</p>
+                  <p className='text-xs text-gray-300 truncate'>{currentSong.artist}</p>
                 </div>
                 
                 {/* Controls */}
-                <div className="flex items-center justify-center space-x-1">
+                <div className="flex items-center justify-center space-x-1 mt-1">
                   {hasPrevSong && (
                     <button 
                       onClick={prevSong}
-                      className="text-white rounded-full hover:bg-white hover:bg-opacity-20 transition-all p-1"
+                      className="text-white rounded-full hover:bg-white hover:bg-opacity-20 transition-all"
                     >
-                      <span className="text-xs">⬅️</span>
+                      <span className="flex items-center justify-center h-5 w-5 rounded-full bg-white bg-opacity-20">
+                        ⬅️
+                      </span>
                     </button>
                   )}
                   
-                  {currentSong?.previewUrl && (
+                  {currentSong.previewUrl && (
                     <button 
                       onClick={(e) => togglePlay(currentSong.previewUrl, e)}
-                      className="text-white mx-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-all p-1"
+                      className="text-white mx-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-all"
                     >
-                      <span className="text-sm">
+                      <span className={`flex items-center justify-center h-7 w-7 rounded-full bg-white bg-opacity-20 
+                        ${currentPreview === currentSong.previewUrl && isPlaying ? 'bg-opacity-40' : ''}`}>
                         {currentPreview === currentSong.previewUrl && isPlaying ? '⏸️' : '▶️'}
                       </span>
                     </button>
@@ -244,9 +247,20 @@ export default function PlaylistDisplay() {
                   {hasNextSong && (
                     <button 
                       onClick={nextSong}
-                      className="text-white rounded-full hover:bg-white hover:bg-opacity-20 transition-all p-1"
+                      className="text-white rounded-full hover:bg-white hover:bg-opacity-20 transition-all"
                     >
-                      <span className="text-xs">➡️</span>
+                      <span className="flex items-center justify-center h-5 w-5 rounded-full bg-white bg-opacity-20">
+                        ➡️
+                      </span>
+                    </button>
+                  )}
+                  
+                  {currentSong.spotifyUrl && (
+                    <button 
+                      onClick={(e) => openSpotify(currentSong.spotifyUrl, e)}
+                      className="text-white ml-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-all"
+                    >
+                      <span className="flex items-center justify-center h-5 w-5 rounded-full bg-white bg-opacity-20 text-xs">🎧</span>
                     </button>
                   )}
                 </div>
@@ -255,7 +269,7 @@ export default function PlaylistDisplay() {
             
             <button 
               onClick={viewFullPlaylist}
-              className="mt-auto mb-1 px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 
+              className="mt-auto mb-2 px-4 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 
                 rounded-full text-xs font-medium transition-all border border-white border-opacity-30
                 hover:shadow-glow-sm"
             >

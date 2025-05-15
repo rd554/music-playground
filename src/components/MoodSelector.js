@@ -3,28 +3,31 @@
 import { useOrb } from '../context/OrbContext';
 
 export default function MoodSelector() {
-  const { addMood } = useOrb();
+  const { addMood, moods: selectedMoods } = useOrb();
 
   const moods = [
-    { name: 'Calm', emoji: '🌊' },
-    { name: 'Energetic', emoji: '⚡' },
-    { name: 'Melancholic', emoji: '🌧️' },
-    { name: 'Optimistic', emoji: '☀️' },
-    { name: 'Inspired', emoji: '💡' },
+    { name: 'Calm', icon: '🌊' },
+    { name: 'Energetic', icon: '⚡' },
+    { name: 'Melancholic', icon: '🌧️' },
+    { name: 'Optimistic', icon: '☀️' },
+    { name: 'Inspired', icon: '💡' },
   ];
 
   return (
-    <div className="mood-buttons-container flex justify-center space-x-2 px-4 py-2 w-full max-w-screen-lg mx-auto">
+    <div className='flex gap-4 mt-8'>
       {moods.map((mood) => (
         <button
           key={mood.name}
           onClick={() => addMood(mood)}
-          className="mood-button bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full 
-            transition-all duration-300 flex items-center space-x-2 whitespace-nowrap
-            text-sm md:text-base"
+          disabled={selectedMoods.some((m) => m.name === mood.name)}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full transition
+            ${
+              selectedMoods.some((m) => m.name === mood.name)
+                ? 'bg-blue-500 text-white opacity-50 cursor-not-allowed'
+                : 'bg-gray-800 hover:bg-gray-700'
+            }`}
         >
-          <span className="text-lg">{mood.emoji}</span>
-          <span>{mood.name}</span>
+          {mood.icon} {mood.name}
         </button>
       ))}
     </div>
