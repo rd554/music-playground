@@ -1,26 +1,39 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import './playlist.css';
 
-export default function PlaylistPage() {
-  const router = useRouter();
+// Separate client component for handling search params
+function PlaylistWithParams() {
   const searchParams = useSearchParams();
+  const moods = searchParams?.get('moods') || 'Your Custom';
+  return <PlaylistContent moods={moods} />;
+}
+
+function PlaylistContent({ moods }) {
   const [playlist, setPlaylist] = useState(null);
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Get the playlist data from localStorage
-    const storedPlaylist = localStorage.getItem('currentPlaylist');
-    if (storedPlaylist) {
-      setPlaylist(JSON.parse(storedPlaylist));
-    } else {
-      // If no playlist in storage, redirect back to home
-      router.push('/');
+    try {
+      // Get the playlist data from localStorage
+      const storedPlaylist = localStorage.getItem('currentPlaylist');
+      if (storedPlaylist) {
+        setPlaylist(JSON.parse(storedPlaylist));
+      } else {
+        // If no playlist in storage, redirect back to home
+        router.push('/');
+      }
+    } catch (err) {
+      setError('Failed to load playlist');
+      console.error('Error loading playlist:', err);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, [router]);
 
   const handleSpotifyClick = (url) => {
@@ -29,12 +42,19 @@ export default function PlaylistPage() {
     }
   };
 
-  if (isLoading) {
+  if (error) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+      <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center">
+        <h1 className="text-2xl mb-4">Error: {error}</h1>
+        <Link href="/" className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full">
+          Return Home
+        </Link>
       </div>
     );
+  }
+
+  if (isLoading) {
+    return <LoadingPlaylist />;
   }
 
   if (!playlist) {
@@ -47,8 +67,6 @@ export default function PlaylistPage() {
       </div>
     );
   }
-
-  const moods = searchParams.get('moods') || 'Your Custom';
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8">
@@ -113,5 +131,22 @@ export default function PlaylistPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Loading component for Suspense fallback
+function LoadingPlaylist() {
+  return (
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+    </div>
+  );
+}
+
+export default function PlaylistPage() {
+  return (
+    <Suspense fallback={<LoadingPlaylist />}>
+      <PlaylistWithParams />
+    </Suspense>
   );
 } 

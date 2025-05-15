@@ -2,92 +2,55 @@
 
 import { useState } from 'react';
 import { useOrb } from '../context/OrbContext';
-import { analyzeMood } from '../utils/openai';
 
 export default function EmotionInput() {
-  const [emotion, setEmotion] = useState('');
-  const { addMood, moods } = useOrb();
-  const [isHovering, setIsHovering] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  
-  // Check if max moods reached
-  const isMaxMoodsReached = moods.length >= 4;
+  const [input, setInput] = useState('');
+  const { addMood } = useOrb();
 
-  const handleSubmit = async () => {
-    if (emotion.trim() && emotion.split(' ').length <= 6 && !isMaxMoodsReached && !isAnalyzing) {
-      setIsAnalyzing(true);
-      
-      try {
-        // Analyze the mood using OpenAI
-        const analyzedMood = await analyzeMood(emotion.trim());
-        
-        // Add the mood to the orb
-        addMood(analyzedMood);
-        
-        // Clear the input
-        setEmotion('');
-      } catch (error) {
-        console.error('Error analyzing mood:', error);
-        // Fallback to default mood if analysis fails
-        addMood({
-          name: emotion.trim(),
-          icon: '💭',
-          isCustom: true
-        });
-        setEmotion('');
-      } finally {
-        setIsAnalyzing(false);
-      }
-    }
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!input.trim()) return;
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSubmit();
+    try {
+      const response = await fetch('/api/analyzeMood', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: input }),
+      });
+
+      if (!response.ok) throw new Error('Failed to analyze mood');
+
+      const data = await response.json();
+      addMood({ name: data.mood, emoji: data.emoji });
+      setInput('');
+    } catch (error) {
+      console.error('Error analyzing mood:', error);
     }
   };
 
   return (
-    <div className='mt-4 w-3/4 sm:w-1/2 flex items-center space-x-2'>
-      <div 
-        className="relative flex-grow"
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-      >
+    <form onSubmit={handleSubmit} className="input-container w-full max-w-md mx-auto px-4 mt-6">
+      <div className="flex flex-col sm:flex-row items-center gap-2">
         <input
-          type='text'
-          className={`w-full p-3 bg-gray-800 text-white rounded-full placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500
-            ${isMaxMoodsReached ? 'opacity-50 cursor-not-allowed' : ''}`}
-          placeholder='Describe your mood... (max 6 words)'
-          value={emotion}
-          onChange={(e) => setEmotion(e.target.value)}
-          onKeyPress={handleKeyPress}
-          maxLength={50}
-          disabled={isMaxMoodsReached || isAnalyzing}
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Describe your mood... (max 100 chars)"
+          maxLength={100}
+          className="input-field w-full px-4 py-2 rounded-full bg-gray-800 text-white 
+            placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500
+            text-sm md:text-base"
         />
-        {isMaxMoodsReached && isHovering && (
-          <div className="absolute inset-0 flex items-center justify-center rounded-full bg-gray-800 bg-opacity-70 transition-opacity duration-200">
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl">❌</span>
-            </div>
-          </div>
-        )}
+        <button
+          type="submit"
+          disabled={!input.trim()}
+          className="submit-button w-full sm:w-auto px-6 py-2 bg-purple-600 text-white rounded-full
+            hover:bg-purple-700 transition-colors duration-300 disabled:opacity-50 
+            disabled:cursor-not-allowed text-sm md:text-base whitespace-nowrap"
+        >
+          Submit
+        </button>
       </div>
-      <button
-        onClick={handleSubmit}
-        disabled={!emotion.trim() || emotion.split(' ').length > 6 || isMaxMoodsReached || isAnalyzing}
-        className={`px-4 py-2 bg-blue-500 text-white rounded-full transition whitespace-nowrap
-          ${(!emotion.trim() || emotion.split(' ').length > 6 || isMaxMoodsReached || isAnalyzing) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
-      >
-        {isAnalyzing ? (
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            <span>Analyzing</span>
-          </div>
-        ) : (
-          'Submit'
-        )}
-      </button>
-    </div>
+    </form>
   );
 }
