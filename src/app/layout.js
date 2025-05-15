@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import '../styles/mobile.css';
 import { OrbProvider } from '../context/OrbContext';
 
 export default function RootLayout({ children }) {

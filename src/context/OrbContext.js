@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 const OrbContext = createContext();
 
@@ -11,6 +12,24 @@ export function OrbProvider({ children }) {
   const [isPlaylistVisible, setIsPlaylistVisible] = useState(false);
   const [playlistTimer, setPlaylistTimer] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const pathname = usePathname();
+
+  // Restore state when returning from playlist page
+  useEffect(() => {
+    // If we're on the home page, check for stored playlist
+    if (pathname === '/') {
+      const storedPlaylist = localStorage.getItem('currentPlaylist');
+      if (storedPlaylist && !playlist) {
+        try {
+          const parsedPlaylist = JSON.parse(storedPlaylist);
+          setPlaylist(parsedPlaylist);
+          setIsPlaylistVisible(true);
+        } catch (error) {
+          console.error('Error parsing stored playlist:', error);
+        }
+      }
+    }
+  }, [pathname, playlist]);
 
   // Effect to handle automatic playlist generation after mood changes
   useEffect(() => {
@@ -73,6 +92,8 @@ export function OrbProvider({ children }) {
       clearTimeout(playlistTimer);
       setPlaylistTimer(null);
     }
+    // Clear localStorage when resetting
+    localStorage.removeItem('currentPlaylist');
   };
 
   const generatePlaylist = async () => {
@@ -96,6 +117,9 @@ export function OrbProvider({ children }) {
       setPlaylist(data.playlist);
       setIsPlaylistVisible(true);
       setIsAnimating(false);
+      
+      // Save to localStorage for persistence
+      localStorage.setItem('currentPlaylist', JSON.stringify(data.playlist));
     } catch (error) {
       console.error('Error generating playlist:', error);
       // Fallback to a simple playlist if API fails
@@ -109,6 +133,9 @@ export function OrbProvider({ children }) {
       setPlaylist(fallbackPlaylist);
       setIsPlaylistVisible(true);
       setIsAnimating(false);
+      
+      // Save fallback to localStorage
+      localStorage.setItem('currentPlaylist', JSON.stringify(fallbackPlaylist));
     } finally {
       setIsLoading(false);
     }
@@ -132,6 +159,7 @@ export function OrbProvider({ children }) {
         generatePlaylist,
         resetOrb,
         isPlaylistVisible,
+        setIsPlaylistVisible,
         hidePlaylist,
         moodPositions,
         isLoading,

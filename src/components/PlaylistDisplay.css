@@ -93,4 +93,37 @@
   100% {
     width: 6px;
   }
+}
+
+/* Playlist container positioning */
+.playlist-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+/* Ensure playlist orb is circular */
+.playlist-orb {
+  aspect-ratio: 1 / 1;
+  transform: translateY(0%);
+  transform-origin: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* Mobile-specific playlist styles */
+@media (max-width: 768px) {
+  .playlist-container {
+    position: absolute !important;
+    inset: 0 !important;
+  }
+  
+  .playlist-orb {
+    aspect-ratio: 1 / 1 !important;
+    transform: translateY(0%) !important;
+  }
 } 

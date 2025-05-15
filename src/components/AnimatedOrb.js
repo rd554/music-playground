@@ -67,10 +67,10 @@ export default function AnimatedOrb() {
   return (
     <div
       onClick={handleClick}
-      className={`relative flex items-center justify-center h-64 w-64 rounded-full 
+      className={`w-full h-full flex items-center justify-center rounded-full 
       bg-gradient-to-r ${getOrbGradient()} 
       ${isAnimating ? 'animate-pulse' : ''} 
-      shadow-2xl cursor-pointer mb-16 transition-all duration-500`}
+      shadow-2xl cursor-pointer transition-all duration-500`}
     >
       {moods.length === 0 && (
         <p className='text-lg font-medium text-gray-300'>

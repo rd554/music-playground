@@ -14,7 +14,7 @@ export default function MoodSelector() {
   ];
 
   return (
-    <div className='flex gap-4 mt-8'>
+    <div className='flex gap-4 mt-8 w-full justify-start'>
       {moods.map((mood) => (
         <button
           key={mood.name}

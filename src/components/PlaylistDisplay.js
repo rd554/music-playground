@@ -2,7 +2,7 @@
 
 import { useOrb } from '../context/OrbContext';
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import './PlaylistDisplay.css';
 
 export default function PlaylistDisplay() {
@@ -14,6 +14,19 @@ export default function PlaylistDisplay() {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const scrollContainerRef = useRef(null);
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Handle returning from playlist page
+  useEffect(() => {
+    // Reset position when component mounts or pathname changes
+    if (pathname === '/') {
+      // Force the playlist to be visible when coming back from another page
+      const storedPlaylist = localStorage.getItem('currentPlaylist');
+      if (storedPlaylist && scrollContainerRef.current) {
+        // No need to adjust transform, using CSS transform now
+      }
+    }
+  }, [pathname]);
 
   // Add animation effect when playlist appears or changes
   useEffect(() => {
@@ -125,6 +138,12 @@ export default function PlaylistDisplay() {
     // Get mood names as a comma-separated string
     const moodNames = moods.map(m => m.name).join(', ');
     
+    // Stop any playing audio before navigation
+    if (audio) {
+      audio.pause();
+      setIsPlaying(false);
+    }
+    
     // Navigate to the playlist page with moods as a query parameter
     router.push(`/playlist?moods=${encodeURIComponent(moodNames)}`);
   };
@@ -152,11 +171,11 @@ export default function PlaylistDisplay() {
   const hasPrevSong = currentSongIndex > 0;
 
   return (
-    <div className='absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center'>
+    <div className='absolute inset-0 flex items-center justify-center z-20 playlist-container'>
       <div 
-        className={`h-64 w-64 -translate-y-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full 
+        className={`h-full w-full bg-gradient-to-r from-pink-500 to-purple-500 rounded-full 
           shadow-2xl text-white flex flex-col items-center justify-center overflow-hidden
-          transition-all duration-500 ease-in-out
+          transition-all duration-500 ease-in-out playlist-orb
           ${isAnimating ? 'scale-110 opacity-90' : 'scale-100 opacity-100'}`}
         ref={scrollContainerRef}
       >

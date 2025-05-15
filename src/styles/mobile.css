@@ -1,0 +1,226 @@
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  /* Mood Orb */
+  .h-64 {
+    height: 35vh !important;
+    width: 35vh !important;
+  }
+
+  /* Mood Buttons Container */
+  .flex.gap-4.mt-8 {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    padding: 1rem 0.5rem;
+    gap: 0.5rem !important;
+    justify-content: flex-start !important;
+    margin-top: 1rem !important;
+    padding-left: 0 !important; /* Ensure no left padding pushes content right */
+    width: 100% !important; /* Ensure full width */
+    margin-left: 0 !important; /* Remove any margin that might push from left */
+  }
+
+  .flex.gap-4.mt-8::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+
+  /* Mood Buttons */
+  .flex.gap-4.mt-8 button {
+    flex-shrink: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  /* Input Container */
+  .mt-4.w-3\/4.sm\:w-1\/2 {
+    width: 90% !important;
+    margin-top: 1rem !important;
+  }
+
+  /* Input Field */
+  .w-full.p-3 {
+    padding: 0.75rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  /* Submit Button */
+  .px-4.py-2.bg-blue-500 {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.875rem !important;
+    height: 44px !important;
+    max-width: 120px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Fix playlist overlay alignment on orb */
+  .absolute.top-0.left-0.right-0.bottom-0.flex.items-center.justify-center.z-10 {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -62%) !important; /* Moved further up */
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Make playlist display perfectly circular */
+  .h-64.w-64.bg-gradient-to-r.from-pink-500.to-purple-500.rounded-full {
+    height: 35vh !important;
+    width: 35vh !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  /* Song Card in Playlist */
+  .w-\[85\%\].bg-black.bg-opacity-30 {
+    width: 90% !important;
+    padding: 0.75rem !important;
+  }
+
+  /* Album Art */
+  .h-14.w-14 {
+    height: 3rem !important;
+    width: 3rem !important;
+  }
+
+  /* Song Info */
+  .text-sm.font-medium {
+    font-size: 0.75rem !important;
+  }
+
+  .text-xs.text-gray-300 {
+    font-size: 0.7rem !important;
+  }
+
+  /* Playlist Controls */
+  .flex.items-center.justify-center.space-x-1.mt-1 {
+    gap: 0.5rem !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .h-5.w-5 {
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+  }
+
+  /* View Full Playlist Button */
+  .mt-auto.mb-2.px-4.py-1 {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* Playlist View Page */
+  .playlist-header {
+    flex-direction: column !important;
+    gap: 1rem !important;
+    text-align: center !important;
+    padding: 1rem !important;
+  }
+
+  .playlist-header h1 {
+    font-size: 1.5rem !important;
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-2.gap-6 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    padding: 0 0.5rem !important;
+  }
+
+  .song-card {
+    margin-bottom: 0.5rem !important;
+  }
+
+  .song-card .h-24.w-24 {
+    height: 4rem !important;
+    width: 4rem !important;
+  }
+
+  .song-card .text-xl {
+    font-size: 1rem !important;
+  }
+
+  /* Fix spacing issues */
+  .min-h-screen.p-8 {
+    padding: 1rem !important;
+  }
+
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+
+  /* Fix mood orb position on small screens */
+  .relative {
+    margin-top: 1rem !important;
+  }
+
+  /* Ensure buttons are easily tappable */
+  button, 
+  a[role="button"],
+  .spotify-button {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 375px) {
+  .h-64 {
+    height: 32vh !important;
+    width: 32vh !important;
+  }
+
+  /* Ensure the orb playlist overlay stays circular */
+  .h-64.w-64.bg-gradient-to-r.from-pink-500.to-purple-500.rounded-full {
+    height: 32vh !important;
+    width: 32vh !important;
+  }
+
+  /* Ensure mood buttons start from extreme left */
+  .flex.gap-4.mt-8 {
+    padding-left: 0.25rem !important;
+  }
+
+  .flex.gap-4.mt-8 button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  /* Make submit button match the mood buttons */
+  .px-4.py-2.bg-blue-500 {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.8rem !important;
+    max-width: 100px !important;
+  }
+
+  /* Adjust playlist header for very small screens */
+  .playlist-header h1 {
+    font-size: 1.25rem !important;
+  }
+
+  .playlist-header p {
+    font-size: 0.875rem !important;
+  }
+
+  /* Further compact song cards */
+  .song-card .h-24.w-24 {
+    height: 3.5rem !important;
+    width: 3.5rem !important;
+  }
+
+  /* Ensure minimum touch target sizes */
+  .mood-buttons-container button {
+    min-height: 40px !important;
+    min-width: 40px !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+} 
